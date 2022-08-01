@@ -1,0 +1,47 @@
+{
+  "name": "vonheldenundgestalten/contao-boxes",
+  "type": "contao-bundle",
+  "description": "Provides flexible boxes for Contao CMS to manage content on a by-page basis.",
+  "license": "LGPL-3.0-or-later",
+  "keywords": [
+    "contao",
+    "content",
+    "box",
+    "boxes"
+  ],
+  "authors": [
+    {
+      "name": "Markus Milkereit",
+      "email": "mm@vonheldenundgestalten.de",
+      "homepage": "http://www.vonheldenundgestalten.de",
+      "role": "Developer"
+    },
+    {
+      "name": "Marko Todic",
+      "email": "marko.todic@magmell.de",
+      "homepage": "http://www.magmell.de",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "contao/core-bundle": "^4.4"
+  },
+  "extra": {
+    "contao-manager-plugin": "Magmell\\Contao\\Boxes\\ContaoManager\\Plugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Magmell\\Contao\\Boxes\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  }
+}
