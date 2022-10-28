@@ -1,6 +1,6 @@
 <?php
 
-namespace Magmell\Contao\Boxes;
+namespace VHUG\Contao\Boxes;
 
 use Contao\Database;
 

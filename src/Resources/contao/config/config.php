@@ -32,14 +32,14 @@ $GLOBALS['TL_Boxes_CTE'] = array
 (
     'texts' => array
     (
-        'headline'  => 'Magmell\Contao\Boxes\BoxesContentHeadline',
-        'text'      => 'Magmell\Contao\Boxes\BoxesContentText',
+        'headline'  => 'VHUG\Contao\Boxes\BoxesContentHeadline',
+        'text'      => 'VHUG\Contao\Boxes\BoxesContentText',
         // 'html'      => 'BoxesContentHtml', // TODO implement class
     ),
     'images' => array
     (
         // 'image'     => 'BoxesContentImage', // TODO implement class
-        'gallery'   => 'Magmell\Contao\Boxes\BoxesContentGallery'
+        'gallery'   => 'VHUG\Contao\Boxes\BoxesContentGallery'
     ),
     'files' => array
     (
@@ -48,9 +48,9 @@ $GLOBALS['TL_Boxes_CTE'] = array
     ),
     'includes' => array
     (
-        'article'   => 'Magmell\Contao\Boxes\BoxesContentArticle',
+        'article'   => 'VHUG\Contao\Boxes\BoxesContentArticle',
         // 'alias'     => 'BoxesContentAlias', // TODO implement class
-        'module'    => 'Magmell\Contao\Boxes\BoxesContentModule',
+        'module'    => 'VHUG\Contao\Boxes\BoxesContentModule',
     )
 );
 
@@ -73,5 +73,5 @@ array_insert($GLOBALS['BE_MOD']['content'], sizeof($GLOBALS['BE_MOD']['content']
  */
 array_insert($GLOBALS['FE_MOD']['miscellaneous'],0, array
 (
-  'contentbox' => 'Magmell\Contao\Boxes\ModuleBoxes'
+  'contentbox' => 'VHUG\Contao\Boxes\ModuleBoxes'
 ));

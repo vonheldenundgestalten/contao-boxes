@@ -13,7 +13,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace Magmell\Contao\Boxes;
+namespace VHUG\Contao\Boxes;
 
 /**
  * Reads and writes news

@@ -18,21 +18,25 @@
     },
     {
       "name": "Marko Todic",
-      "email": "marko.todic@magmell.de",
-      "homepage": "http://www.magmell.de",
+      "role": "Developer"
+    },
+    {
+      "name": "Miroslav Horvatov",
+      "email": "miroslav@vonheldenundgestalten.de",
+      "homepage": "https://github.com/Kimleta",
       "role": "Developer"
     }
   ],
   "require": {
-    "php": "^5.6 || ^7.0",
+    "php": "^7.2 || ^8.0",
     "contao/core-bundle": "^4.4"
   },
   "extra": {
-    "contao-manager-plugin": "Magmell\\Contao\\Boxes\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "VHUG\\Contao\\Boxes\\ContaoManager\\Plugin"
   },
   "autoload": {
     "psr-4": {
-      "Magmell\\Contao\\Boxes\\": "src/"
+      "VHUG\\Contao\\Boxes\\": "src/"
     },
     "classmap": [
       "src/Resources/contao/"
