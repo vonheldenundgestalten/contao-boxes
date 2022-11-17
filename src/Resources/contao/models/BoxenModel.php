@@ -15,6 +15,8 @@
  */
 namespace VHUG\Contao\Boxes;
 
+use Contao\Date;
+use Contao\CoreBundle\File\ModelMetadataTrait;
 /**
  * Reads and writes news
  *
@@ -24,9 +26,31 @@ namespace VHUG\Contao\Boxes;
  */
 class BoxenModel extends \Model
 {
+    use ModelMetadataTrait;
     /**
      * Table name
      * @var string
      */
     protected static $strTable = 'tl_boxen';
+
+	public static function findPublishedByModuleId($intMod, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.modul_id=?");
+		$arrValues = array($intMod);
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findBy($arrColumns, $arrValues, $arrOptions);
+	}
+
 }

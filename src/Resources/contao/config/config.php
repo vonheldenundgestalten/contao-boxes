@@ -1,4 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
+
+use VHUG\Contao\Boxes\BoxenModel;
+
+ if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
  * Extension for: TYPOlight webCMS
@@ -28,6 +32,12 @@
  * Box CONTENT ELEMENTS
  * -------------------------------------------------------------------------
  */
+
+
+
+$GLOBALS['TL_MODELS']['tl_boxen'] = BoxenModel::class;
+
+
 $GLOBALS['TL_Boxes_CTE'] = array
 (
     'texts' => array

@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
 
     // Palettes
     'palettes' => array(
-        '__selector__'                => array('type', 'addImage', 'addEnclosure'),
+        '__selector__'                => array('type', 'addImage', 'addEnclosure','overwriteMeta'),
         'default'                     => '{title_legend},type,title,headline;{column_legend},position,modul_id;',
         'headline'                    => '{title_legend},type,title,headline;{column_legend},position,modul_id;{pages_legend},pages,reversePages,inheritPages;{expert_legend:hide},space,cssID;{publish_legend},published,start,stop',
         'text'                        => '{title_legend},type,title,headline;{column_legend},position,modul_id;{content_legend},content;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{pages_legend},pages,reversePages,inheritPages;{expert_legend:hide},space,cssID;{publish_legend},published,start,stop',
@@ -120,7 +120,8 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
 
     // Subpalettes
     'subpalettes' => array(
-        'addImage'                    => 'singleSRC,alt,imagemargin,size,imageUrl,caption,floating,fullsize',
+        'addImage'                    => 'singleSRC,alt,imagemargin,size,overwriteMeta',
+        'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
         'addEnclosure'                => 'enclosure',
     ),
 
@@ -285,6 +286,13 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'eval'                    => array('rgxp' => 'extnd', 'maxlength' => 255, 'tl_class' => 'w50'),
             'sql'                     => "varchar(255) NOT NULL default ''"
         ),
+        'overwriteMeta' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+		),
         'floating' => array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
             'exclude'                 => true,
