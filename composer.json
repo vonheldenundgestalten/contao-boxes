@@ -47,5 +47,8 @@
       "src/Resources/contao/languages/",
       "src/Resources/contao/templates/"
     ]
+  },
+  "replace": {
+    "magmell-agentur/contao-boxes":"*"
   }
 }
