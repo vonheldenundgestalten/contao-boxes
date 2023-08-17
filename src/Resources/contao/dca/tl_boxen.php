@@ -410,14 +410,14 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_boxen']['start'],
             'exclude'                 => true,
             'inputType'               => 'text',
-            'eval'                    => array('rgxp' => 'date', 'datepicker' => $this->getDatePickerString(), 'tl_class' => 'w50 wizard'),
+            'eval'                    => array('rgxp' => 'date',  'datepicker'=>true, 'tl_class' => 'w50 wizard'),
             'sql'                     => "varchar(10) NOT NULL default ''"
         ),
         'stop' => array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_boxen']['stop'],
             'exclude'                 => true,
             'inputType'               => 'text',
-            'eval'                    => array('rgxp' => 'date', 'datepicker' => $this->getDatePickerString(), 'tl_class' => 'w50 wizard'),
+            'eval'                    => array('rgxp' => 'date',  'datepicker'=>true, 'tl_class' => 'w50 wizard'),
             'sql'                     => "varchar(10) NOT NULL default ''"
         )
     )

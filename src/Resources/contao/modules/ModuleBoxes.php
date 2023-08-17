@@ -28,7 +28,9 @@
 namespace VHUG\Contao\Boxes;
 
 use VHUG\Contao\Boxes\BoxenModel;
-
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Contao\System;
 /**
  * Class: ModuleBoxes
  *
@@ -64,6 +66,14 @@ class ModuleBoxes extends \Module
      */
     protected $strTemplate = 'mod_box';
 
+    private $requestStack;
+    private $scopeMatcher;
+
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
 
     /**
      * Display a wildcard in the back end
@@ -71,7 +81,10 @@ class ModuleBoxes extends \Module
      */
     public function generate()
     {
-        if (TL_MODE == 'BE')
+
+        $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+        
+        if ($hasBackendUser == 'BE')
         {
             $objTemplate = new \BackendTemplate('be_wildcard');
             $objTemplate->wildcard = '### CONTENT BOXES ###';
@@ -147,16 +160,20 @@ class ModuleBoxes extends \Module
      */
     protected function getBoxesContentElement($objElement)
     {
+
+        $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+        $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+
         // Show to guests only
-        if ($objElement->guests && FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN && !$objElement->protected)
+        if ($objElement->guests && $hasFrontendUser && !$hasBackendUser && !$objElement->protected)
         {
             return '';
         }
 
         // Protected element
-        if ($objElement->protected && !BE_USER_LOGGED_IN)
+        if ($objElement->protected && !$hasBackendUser)
         {
-            if (!FE_USER_LOGGED_IN)
+            if (!$hasFrontendUser)
             {
                 return '';
             }
@@ -170,8 +187,10 @@ class ModuleBoxes extends \Module
             }
         }
 
+        $tl_mode_be = $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        
         // Remove spacing in the back end preview
-        if (TL_MODE == 'BE')
+        if ($tl_mode_be == 'BE')
         {
             $objElement->space = null;
         }

@@ -69,19 +69,26 @@ $GLOBALS['TL_Boxes_CTE'] = array
  * BACK END MODULES
  * -------------------------------------------------------------------------
  */
-array_insert($GLOBALS['BE_MOD']['content'], sizeof($GLOBALS['BE_MOD']['content']), array('contentbox' => array
-(
-    'tables'     => array('tl_boxen'),
-    'icon'       => 'system/modules/boxes/assets/icon.gif',
-)
-));
+// array_insert($GLOBALS['BE_MOD']['content'], sizeof($GLOBALS['BE_MOD']['content']), array('contentbox' => array
+// (
+//     'tables'     => array('tl_boxen'),
+//     'icon'       => 'system/modules/boxes/assets/icon.gif',
+// )
+// ));
+
+$GLOBALS['BE_MOD']['content']['contentbox']['tables'] = array('tl_boxen') ;
+$GLOBALS['BE_MOD']['content']['contentbox']['icon'] = 'system/modules/boxes/assets/icon.gif' ;
+
+
 
 /**
- * -------------------------------------------------------------------------
- * FRONT END MODULES
- * -------------------------------------------------------------------------
- */
-array_insert($GLOBALS['FE_MOD']['miscellaneous'],0, array
-(
-  'contentbox' => 'VHUG\Contao\Boxes\ModuleBoxes'
-));
+  * -------------------------------------------------------------------------
+  * FRONT END MODULES
+  * -------------------------------------------------------------------------
+  */
+// array_insert($GLOBALS['FE_MOD']['miscellaneous'],0, array
+// (
+//   'contentbox' => 'VHUG\Contao\Boxes\ModuleBoxes'
+// ));
+
+$GLOBALS['FE_MOD']['miscellaneous']['contentbox'] = 'VHUG\Contao\Boxes\ModuleBoxes';
