@@ -1,6 +1,8 @@
 <?php
 
 use Contao\Controller;
+use Contao\Backend;
+use Contao\DC_Table;
 
 /**
  * Extension for: TYPOlight webCMS
@@ -36,7 +38,7 @@ $this->loadDataContainer('tl_content');
 $GLOBALS['TL_DCA']['tl_boxen'] = array(
     // Config
     'config' => array(
-        'dataContainer'               => 'Table',
+        'dataContainer'               => DC_Table::class,
         'enableVersioning'            => true,
         'sql' => array(
             'keys' => array(
@@ -434,7 +436,7 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
  * @author     Markus Milkereit <markus@computino.de>
  * @package    Controller
  */
-class tl_boxen extends \Backend
+class tl_boxen extends Backend
 {
     /**
      * Import the back end user object
@@ -442,7 +444,6 @@ class tl_boxen extends \Backend
     public function __construct()
     {
         parent::__construct();
-        $this->import('BackendUser', 'User');
     }
 
     /**
