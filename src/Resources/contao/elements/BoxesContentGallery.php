@@ -31,7 +31,9 @@
  */
 namespace VHUG\Contao\Boxes;
 
-class BoxesContentGallery extends \ContentGallery
+use Contao\ContentGallery;
+
+class BoxesContentGallery extends ContentGallery
 {
     /**
      * Template

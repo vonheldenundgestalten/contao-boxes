@@ -31,7 +31,9 @@
  */
 namespace VHUG\Contao\Boxes;
 
-class BoxesContentHeadline extends \ContentHeadline
+use Contao\ContentHeadline;
+
+class BoxesContentHeadline extends ContentHeadline
 {
     /**
      * Template

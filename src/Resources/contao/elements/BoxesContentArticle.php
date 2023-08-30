@@ -31,7 +31,9 @@
  */
 namespace VHUG\Contao\Boxes;
 
-class BoxesContentArticle extends \ContentElement
+use Contao\ContentElement;
+
+class BoxesContentArticle extends ContentElement
 {
     /**
      * Template

@@ -31,6 +31,9 @@ use VHUG\Contao\Boxes\BoxenModel;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Contao\System;
+use Contao\BackendTemplate;
+use Contao\Module;
+use Contao\Database;
 /**
  * Class: ModuleBoxes
  *
@@ -58,7 +61,7 @@ use Contao\System;
  *
  *
  */
-class ModuleBoxes extends \Module
+class ModuleBoxes extends Module
 {
     /**
      * Template
@@ -69,11 +72,10 @@ class ModuleBoxes extends \Module
     private $requestStack;
     private $scopeMatcher;
 
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+    /* public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
-    }
+    } */
 
     /**
      * Display a wildcard in the back end
@@ -83,11 +85,13 @@ class ModuleBoxes extends \Module
     {
 
         $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
         
-        if ($hasBackendUser == 'BE')
+        if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
         {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
             $objTemplate->wildcard = '### CONTENT BOXES ###';
+
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -95,7 +99,7 @@ class ModuleBoxes extends \Module
             return $objTemplate->parse();
         }
 
-        $objRows = \Database::getInstance()->prepare("SELECT COUNT(*) as itemCount FROM tl_boxen WHERE modul_id=?")
+        $objRows = Database::getInstance()->prepare("SELECT COUNT(*) as itemCount FROM tl_boxen WHERE modul_id=?")
                         ->limit(1)
                         ->execute($this->id);
 
@@ -121,7 +125,7 @@ class ModuleBoxes extends \Module
         while($currPage->pid != '0')
         {
             $arrPathIDs[] = $currPage->id;
-            $currPage = \Database::getInstance()->prepare('SELECT id,pid FROM tl_page WHERE id=?')->execute($currPage->pid);
+            $currPage = Database::getInstance()->prepare('SELECT id,pid FROM tl_page WHERE id=?')->execute($currPage->pid);
 
         }
 
@@ -187,10 +191,10 @@ class ModuleBoxes extends \Module
             }
         }
 
-        $tl_mode_be = $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
         
         // Remove spacing in the back end preview
-        if ($tl_mode_be == 'BE')
+        if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
         {
             $objElement->space = null;
         }
@@ -209,7 +213,7 @@ class ModuleBoxes extends \Module
         }
 
         // Return if the class does not exist
-        if (!$this->classFileExists($strClass))
+        if (!class_exists($strClass))
         {
             $this->log('Boxes content element class "'.$strClass.'" (boxes content element "'.$objElement->type.'") does not exist', 'ModuleBoxes getBoxesContentElement()', TL_ERROR);
             return '';

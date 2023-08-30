@@ -1,8 +1,13 @@
 <?php
 
 use Contao\Controller;
+use Contao\Image;
 use Contao\Backend;
 use Contao\DC_Table;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\BackendUser;
+use Contao\DataContainer;
 
 /**
  * Extension for: TYPOlight webCMS
@@ -275,7 +280,7 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'reference'               => &$GLOBALS['TL_LANG']['MSC'],
             'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
             'options_callback' => function () {
-                return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+                return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
             },
             'sql'                     => "varchar(64) NOT NULL default ''"
         ),
@@ -344,9 +349,6 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'inputType'               => 'select',
             'options_callback'        => array('tl_boxen', 'getArticleAlias'),
             'eval'                    => array('mandatory' => true, 'submitOnChange' => true),
-            'wizard' => array(
-                array('tl_content', 'editArticleAlias')
-            ),
             'sql'                     => "int(10) unsigned NOT NULL default '0'"
         ),
         'module' => array(
@@ -456,7 +458,7 @@ class tl_boxen extends Backend
         $arrPids = array();
         $arrAlias = array();
 
-        if (!$this->User->isAdmin) {
+        if (!BackendUser::getInstance()->isAdmin) {
             foreach ($this->User->pagemounts as $id) {
                 $arrPids[] = $id;
                 $arrPids = array_merge($arrPids, $this->getChildRecords($id, 'tl_page', true));
@@ -477,8 +479,8 @@ class tl_boxen extends Backend
             $this->loadLanguageFile('tl_article');
             //var_dump($objAlias->inColumn);exit;
             while ($objAlias->next()) {
-                $arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . (strlen($GLOBALS['TL_LANG']['tl_article'][$objAlias->inColumn]) ? $GLOBALS['TL_LANG']['tl_article'][$objAlias->inColumn] : $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-            }
+                $arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
+                }
         }
 
         return $arrAlias;
@@ -531,13 +533,13 @@ class tl_boxen extends Backend
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
-        if (strlen($this->Input->get('tid'))) {
-            $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+        /* if (strlen($this->Input->get('tid'))) {
+            //$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
             $this->redirect($this->getReferer());
-        }
+        } */
 
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_boxen::published', 'alexf')) {
+        if (!BackendUser::getInstance()->isAdmin && !$this->User->hasAccess('tl_boxen::published', 'alexf')) {
             return '';
         }
 
@@ -549,11 +551,11 @@ class tl_boxen extends Backend
 
         $objPage = $this->Database->prepare("SELECT * FROM tl_boxen WHERE id=?")->limit(1)->execute($row['id']);
 
-        if (!$this->User->isAdmin && !$this->User->isAllowed(2, $objPage->row())) {
+         if (!BackendUser::getInstance()->isAdmin && !$this->User->isAllowed(2, $objPage->row())) {
             return $this->generateImage($icon) . ' ';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+        return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
     }
 
 
@@ -569,7 +571,7 @@ class tl_boxen extends Backend
         $this->Input->setGet('act', 'toggle');
 
         // Check permissions to publish
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_boxen::published', 'alexf')) {
+        if (!BackendUser::getInstance()->isAdmin && !$this->User->hasAccess('tl_boxen::published', 'alexf')) {
             $this->log('Not enough permissions to publish/unpublish Content-Box ID "' . $intId . '"', 'tl_boxen toggleVisibility', TL_ERROR);
             $this->redirect('contao/main.php?act=error');
         }

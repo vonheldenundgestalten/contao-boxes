@@ -17,6 +17,7 @@ namespace VHUG\Contao\Boxes;
 
 use Contao\Date;
 use Contao\CoreBundle\File\ModelMetadataTrait;
+use Contao\Model;
 /**
  * Reads and writes news
  *
@@ -24,7 +25,7 @@ use Contao\CoreBundle\File\ModelMetadataTrait;
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-class BoxenModel extends \Model
+class BoxenModel extends Model
 {
     use ModelMetadataTrait;
     /**

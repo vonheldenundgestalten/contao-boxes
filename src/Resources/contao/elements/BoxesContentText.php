@@ -30,8 +30,9 @@
  * Run in a custom namespace, so the class can be replaced
  */
 namespace VHUG\Contao\Boxes;
+use Contao\ContentText;
 
-class BoxesContentText extends \ContentText
+class BoxesContentText extends ContentText
 {
     /**
      * Template
