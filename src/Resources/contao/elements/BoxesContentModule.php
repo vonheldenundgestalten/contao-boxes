@@ -32,6 +32,8 @@
 namespace VHUG\Contao\Boxes;
 
 use Contao\ContentElement;
+use Contao\ModuleModel;
+use Contao\Module;
 
 class BoxesContentModule extends ContentElement
 {
@@ -46,14 +48,14 @@ class BoxesContentModule extends ContentElement
      */
     protected function compile()
     {
-        $objModule = \ModuleModel::findByPK($this->module);
+        $objModule = ModuleModel::findByPK($this->module);
 
         if ($objModule === null)
         {
             return;
         }
 
-        $strClass = \Module::findClass($objModule->type);
+        $strClass = Module::findClass($objModule->type);
 
         if (!class_exists($strClass))
         {
