@@ -8,6 +8,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\BackendUser;
 use Contao\DataContainer;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Extension for: TYPOlight webCMS
@@ -538,8 +539,11 @@ class tl_boxen extends Backend
             $this->redirect($this->getReferer());
         } */
 
+        $security = System::getContainer()->get('security.helper');
+
+        dump(BackendUser::getInstance());
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!BackendUser::getInstance()->isAdmin && !$this->User->hasAccess('tl_boxen::published', 'alexf')) {
+        if (!BackendUser::getInstance()->isAdmin && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE)) {
             return '';
         }
 
@@ -551,7 +555,7 @@ class tl_boxen extends Backend
 
         $objPage = $this->Database->prepare("SELECT * FROM tl_boxen WHERE id=?")->limit(1)->execute($row['id']);
 
-         if (!BackendUser::getInstance()->isAdmin && !$this->User->isAllowed(2, $objPage->row())) {
+         if (!BackendUser::getInstance()->isAdmin && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE)) {
             return $this->generateImage($icon) . ' ';
         }
 

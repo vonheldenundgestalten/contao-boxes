@@ -83,7 +83,6 @@ class ModuleBoxes extends Module
      */
     public function generate()
     {
-
         $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
         $request = System::getContainer()->get('request_stack')->getCurrentRequest();
         
