@@ -541,7 +541,6 @@ class tl_boxen extends Backend
 
         $security = System::getContainer()->get('security.helper');
 
-        dump(BackendUser::getInstance());
         // Check permissions AFTER checking the tid, so hacking attempts are logged
         if (!BackendUser::getInstance()->isAdmin && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE)) {
             return '';
