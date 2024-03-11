@@ -94,13 +94,14 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
                 'label'               => &$GLOBALS['TL_LANG']['tl_boxen']['delete'],
                 'href'                => 'act=delete',
                 'icon'                => 'delete.gif',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"' ),
-            'toggle' => array(
-                'label'               => &$GLOBALS['TL_LANG']['tl_boxen']['toggle'],
-                'icon'                => 'visible.gif',
-                'attributes'          => 'onclick="Backend.getScrollOffset(); return AjaxRequest.toggleVisibility(this, %s);"',
-                'button_callback'     => array('tl_boxen', 'toggleIcon')
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"' 
             ),
+			'toggle' => array
+			(
+				'href'                => 'act=toggle&amp;field=published',
+				'icon'                => 'visible.svg',
+				'button_callback'     => array('tl_boxen', 'toggleIcon')
+			),
             'show' => array(
                 'label'               => &$GLOBALS['TL_LANG']['tl_boxen']['show'],
                 'href'                => 'act=show',
@@ -405,6 +406,7 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'sql'                     => "varchar(255) NOT NULL default ''"
         ),
         'published' => array(
+            'toggle'                  => true,
             'label'                   => &$GLOBALS['TL_LANG']['tl_boxen']['published'],
             'exclude'                 => true,
             'inputType'               => 'checkbox',
@@ -523,43 +525,37 @@ class tl_boxen extends Backend
 
 
     /**
-     * Return the "toggle visibility" button
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @return string
-     */
-    public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-    {
-        /* if (strlen($this->Input->get('tid'))) {
-            //$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
-            $this->redirect($this->getReferer());
-        } */
+	 * Return the "toggle visibility" button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_boxen::published'))
+		{
+			return '';
+		}
 
-        $security = System::getContainer()->get('security.helper');
+		$href .= '&amp;id=' . $row['id'];
 
-        // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!BackendUser::getInstance()->isAdmin && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE)) {
-            return '';
-        }
+		if (!$row['published'])
+		{
+			$icon = 'invisible.svg';
+		}
 
-        $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-        if (!$row['published']) {
-            $icon = 'invisible.gif';
-        }
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_boxen']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_boxen']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_boxen']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-        $objPage = $this->Database->prepare("SELECT * FROM tl_boxen WHERE id=?")->limit(1)->execute($row['id']);
-
-         if (!BackendUser::getInstance()->isAdmin && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE)) {
-            return $this->generateImage($icon) . ' ';
-        }
-
-        return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
-    }
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+	}
 
 
     /**
