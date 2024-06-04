@@ -57,14 +57,12 @@ class BoxesContentArticle extends ContentElement
      */
     protected function compile()
     {
-        // $this->Template->content = $this->getArticle($this->articleAlias, false, true);
-        $article = ArticleModel::findByAlias($this->articleAlias);
-        dump($article);
-        $this->logger->info('Article: ', (array) $article);
-        if($article !== null) {
-            $this->Template->content = $article->text;
-        } else {
-            $this->Template->content = '';
-        }
+        $this->Template->content = $this->getArticle($this->articleAlias, false, true);
+        // $article = ArticleModel::findByAlias($this->articleAlias);
+        // if($article !== null) {
+        //     $this->Template->content = $article->text;
+        // } else {
+        //     $this->Template->content = '';
+        // }
     }
 }
