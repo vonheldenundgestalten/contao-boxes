@@ -30,7 +30,7 @@
  * Run in a custom namespace, so the class can be replaced
  */
 namespace VHUG\Contao\Boxes;
-
+use Contao\ArticleModel;
 use Contao\ContentElement;
 
 class BoxesContentArticle extends ContentElement
@@ -46,6 +46,12 @@ class BoxesContentArticle extends ContentElement
      */
     protected function compile()
     {
-        $this->Template->content = $this->getArticle($this->articleAlias, false, true);
+        // $this->Template->content = $this->getArticle($this->articleAlias, false, true);
+        $article = ArticleModel::findByAlias($this->articleAlias);
+        if($article !== null) {
+            $this->Template->content = $article->text;
+        } else {
+            $this->Template->content = '';
+        }
     }
 }

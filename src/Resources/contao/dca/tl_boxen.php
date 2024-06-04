@@ -9,6 +9,9 @@ use Contao\System;
 use Contao\BackendUser;
 use Contao\DataContainer;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\ModuleModel;
+use Contao\PageModel;
+use Contao\ArticleModel;
 
 /**
  * Extension for: TYPOlight webCMS
@@ -338,7 +341,9 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['cteAlias'],
             'exclude'                 => true,
             'inputType'               => 'select',
-            'options_callback'        => array('tl_content', 'getAlias'),
+            'options_callback'        => function() { 
+                return PageModel::findByAlias();
+            },
             'eval'                    => array('mandatory' => true, 'submitOnChange' => true),
             'wizard' => array(
                 array('tl_content', 'editAlias')
@@ -349,7 +354,9 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['articleAlias'],
             'exclude'                 => true,
             'inputType'               => 'select',
-            'options_callback'        => array('tl_boxen', 'getArticleAlias'),
+            'options_callback'        => function() {
+                return ArticleModel::findAll();
+            },
             'eval'                    => array('mandatory' => true, 'submitOnChange' => true),
             'sql'                     => "int(10) unsigned NOT NULL default '0'"
         ),
@@ -357,7 +364,9 @@ $GLOBALS['TL_DCA']['tl_boxen'] = array(
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['module'],
             'exclude'                 => true,
             'inputType'               => 'select',
-            'options_callback'        => array('tl_content', 'getModules'),
+            'options_callback'        => function(){ 
+                return ModuleModel::findAll();
+            },
             'eval'                    => array('mandatory' => true, 'submitOnChange' => true),
             'wizard' => array(
                 array('tl_content', 'editModule')
