@@ -32,7 +32,6 @@
 namespace VHUG\Contao\Boxes;
 use Contao\ArticleModel;
 use Contao\ContentElement;
-use Psr\Log\LoggerInterface;
 
 class BoxesContentArticle extends ContentElement
 {
@@ -41,16 +40,6 @@ class BoxesContentArticle extends ContentElement
      * @var string
      */
     protected $strTemplate = 'boxesce_container';
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct($objElement = null, LoggerInterface $logger)
-    {
-        parent::__construct($objElement);
-        $this->logger = $logger;
-    }
 
     /**
      * Generate content element
