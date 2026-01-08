@@ -34,6 +34,7 @@ use Contao\System;
 use Contao\BackendTemplate;
 use Contao\Module;
 use Contao\Database;
+use Psr\Log\LoggerInterface;
 /**
  * Class: ModuleBoxes
  *
@@ -221,7 +222,40 @@ class ModuleBoxes extends Module
         $objElement->typePrefix = 'boxesce_';
 
         $objElement->text = $objElement->content;
-        $objElement = new $strClass($objElement);
+        
+        // Check if the class requires a logger (e.g., BoxesContentArticle)
+        if ($strClass === 'VHUG\Contao\Boxes\BoxesContentArticle') {
+            $logger = System::getContainer()->get('monolog.logger.contao');
+            $objElement = new $strClass($objElement, $logger);
+        } else {
+            // For other classes, try to instantiate with reflection to handle different constructors
+            try {
+                $reflection = new \ReflectionClass($strClass);
+                $constructor = $reflection->getConstructor();
+                
+                if ($constructor) {
+                    $params = $constructor->getParameters();
+                    
+                    // Check if second parameter expects LoggerInterface
+                    if (count($params) >= 2) {
+                        $secondParam = $params[1];
+                        if ($secondParam->getType() && $secondParam->getType()->getName() === 'Psr\Log\LoggerInterface') {
+                            $logger = System::getContainer()->get('monolog.logger.contao');
+                            $objElement = new $strClass($objElement, $logger);
+                        } else {
+                            $objElement = new $strClass($objElement);
+                        }
+                    } else {
+                        $objElement = new $strClass($objElement);
+                    }
+                } else {
+                    $objElement = new $strClass($objElement);
+                }
+            } catch (\ReflectionException $e) {
+                $this->log('Could not instantiate boxes content element class "'.$strClass.'": '.$e->getMessage(), 'ModuleBoxes getBoxesContentElement()', TL_ERROR);
+                return '';
+            }
+        }
 
         // add boxes_item class
         $objElement->cssID = array
